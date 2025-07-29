@@ -30,6 +30,7 @@ export default function SignInPage() {
       Cookies.set('refresh_token', res.refresh_token, { path: '/' });
       router.push('/dashboard');
     } catch (err) {
+        console.log(err)
       alert('Login gagal');
     }
   };
