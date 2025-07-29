@@ -27,7 +27,7 @@ api.interceptors.response.use(
 
         return api(originalConfig);
       } catch (refreshError) {
-        console.error("Refresh failed");
+        console.error(refreshError);
       }
     }
 
