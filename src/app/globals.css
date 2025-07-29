@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Core colors - konversi dari HSL ke format Tailwind v4 */
+  --color-background: hsl(0 0% 0%);
+  --color-foreground: hsl(0 0% 98%);
+  --color-card: hsl(0 0% 3.9%);
+  --color-card-foreground: hsl(0 0% 98%);
+  --color-popover: hsl(0 0% 3.9%);
+  --color-popover-foreground: hsl(0 0% 98%);
+  --color-primary: hsl(195 100% 50%);
+  --color-primary-foreground: hsl(0 0% 0%);
+  --color-secondary: hsl(0 0% 14.9%);
+  --color-secondary-foreground: hsl(0 0% 98%);
+  --color-muted: hsl(0 0% 14.9%);
+  --color-muted-foreground: hsl(0 0% 63.9%);
+  --color-accent: hsl(195 100% 50%);
+  --color-accent-foreground: hsl(0 0% 0%);
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(0 0% 98%);
+  --color-border: hsl(0 0% 14.9%);
+  --color-input: hsl(0 0% 14.9%);
+  --color-ring: hsl(195 100% 50%);
+  
+  /* Custom neon colors - sama seperti asli */
+  --color-neon-blue: hsl(195 100% 50%);
+  --color-neon-cyan: hsl(180 100% 50%);
+  
+  /* Chart colors - sama seperti asli */
+  --color-chart-1: hsl(12 76% 61%);
+  --color-chart-2: hsl(173 58% 39%);
+  --color-chart-3: hsl(197 37% 24%);
+  --color-chart-4: hsl(43 74% 66%);
+  --color-chart-5: hsl(27 87% 67%);
+
+  /* Border radius */
+  --radius: 0.5rem;
+
+  /* Font family */
+  --font-sans: 'Kiwi Maru', serif;
+}
+
+/* Dark mode support - sama seperti v3 */
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-destructive: hsl(0 62.8% 30.6%);
+  }
+}
+
+/* Force dark mode - sama seperti asli */
+:root {
+  color-scheme: dark;
+}
+
+/* Base styles - konversi ke format v4 */
+* {
+  border-color: theme(colors.border);
+}
+
+body {
+  background-color: theme(colors.background);
+  color: theme(colors.foreground);
+  font-family: theme(fontFamily.sans);
+}
+
+/* Custom utilities - konversi ke format v4 dengan hasil yang sama */
+@utility text-glow-blue {
+  text-shadow: 
+    0 0 10px theme(colors.neon-blue), 
+    0 0 20px theme(colors.neon-blue), 
+    0 0 30px theme(colors.neon-blue);
+}
+
+@utility text-glow-cyan {
+  text-shadow: 
+    0 0 10px theme(colors.neon-cyan), 
+    0 0 20px theme(colors.neon-cyan), 
+    0 0 30px theme(colors.neon-cyan);
+}
+
+@utility border-glow-blue {
+  border-color: theme(colors.neon-blue);
+  box-shadow: 
+    0 0 10px color-mix(in srgb, theme(colors.neon-blue) 30%, transparent),
+    inset 0 0 10px color-mix(in srgb, theme(colors.neon-blue) 10%, transparent);
+}
+
+@utility bg-grid-pattern {
+  background-image:
+    linear-gradient(rgba(0, 191, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 191, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+@utility japan-gradient {
+  background: linear-gradient(135deg,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 191, 255, 0.1) 50%,
+    rgba(0, 0, 0, 0.9) 100%);
+}
+
+@utility katakana-overlay {
+  position: relative;
+}
+
+@utility network-lines {
+  background: 
+    radial-gradient(circle at 20% 50%, color-mix(in srgb, theme(colors.neon-blue) 10%, transparent) 1px, transparent 1px),
+    radial-gradient(circle at 80% 50%, color-mix(in srgb, theme(colors.neon-cyan) 10%, transparent) 1px, transparent 1px);
+  background-size: 100px 100px, 120px 120px;
+}
