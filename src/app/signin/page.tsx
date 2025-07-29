@@ -29,8 +29,8 @@ export default function SignInPage() {
       Cookies.set('access-token', res.access_token, { path: '/' });
       Cookies.set('refresh_token', res.refresh_token, { path: '/' });
       router.push('/dashboard');
-    } catch (err) {
-        console.log(err)
+    } catch (_) {
+      console.log(_)
       alert('Login gagal');
     }
   };
@@ -172,7 +172,7 @@ export default function SignInPage() {
 
               <CardFooter className="flex flex-col space-y-4">
                 <div className="text-center text-white/60 text-sm">
-                  Don't have an account?{' '}
+                  Don&apos;t have an account?{' '}
                   <Link
                     href="/signup"
                     className="text-neon-cyan hover:text-neon-blue transition-colors font-medium"
