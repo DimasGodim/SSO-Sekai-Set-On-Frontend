@@ -17,7 +17,7 @@ api.interceptors.response.use(
       originalConfig._retry = true;
 
       try {
-        const res = await axios.post(`${baseUrl}/auth/refresh`, {}, {
+        const res = await api.post(`/auth/refresh`, {}, {
           withCredentials: true,
         });
 
@@ -39,12 +39,10 @@ api.interceptors.response.use(
 export async function SignUp(data: { email: string; password: string; name: string; nickname: string; }) {
   try {
     const res = await api.post('/auth/signup', data);
-    console.log(res)
     return res.data;
   } catch (err) {
     const error = err as AxiosError<{ detail?: string }>;
     const msg = error.response?.data?.detail ?? 'Signup failed.';
-    console.log(error)
     throw new Error(msg);
   }
 }

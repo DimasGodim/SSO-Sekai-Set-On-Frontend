@@ -14,20 +14,14 @@ export default function SignUpPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmationPassword, setShowConfirmationPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    nickname: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const [formData, setFormData] = useState({ name: '', nickname: '', email: '', password: '', confirmPassword: '', });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(''); // Clear previous errors
+    setError('');
   
     if (formData.password !== formData.confirmPassword) {
       setError('Password and confirmation password are not same.');
@@ -36,16 +30,10 @@ export default function SignUpPage() {
     }
   
     try {
-      await SignUp({
-        email: formData.email,
-        password: formData.password,
-        name: formData.name,
-        nickname: formData.nickname,
-      });
+      await SignUp({ email: formData.email, password: formData.password, name: formData.name, nickname: formData.nickname, });
   
       router.push('/verify-email');
     } catch (err) {
-      console.error('Signup error:', err);
       const error = err as Error;
       setError(error.message);
     } finally {

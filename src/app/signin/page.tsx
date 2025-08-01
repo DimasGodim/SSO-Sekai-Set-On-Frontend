@@ -13,25 +13,28 @@ import { SignIn } from '@/lib/auth';
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    identification: '',
-    password: '',
-  });
+  const [formData, setFormData] = useState({ identification: '', password: '', });
+  
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+
     try {
-      const res = await SignIn({
-        identification: formData.identification,
-        password: formData.password,
-      });      
+      const res = await SignIn({ identification: formData.identification, password: formData.password, });      
       Cookies.set('access-token', res.access_token, { path: '/' });
       Cookies.set('refresh_token', res.refresh_token, { path: '/' });
       router.push('/dashboard');
-    } catch (_) {
-      console.log(_)
-      alert('Login gagal');
+    } catch (err) {
+      const error = err as Error;
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -161,11 +164,14 @@ export default function SignInPage() {
                     </div>
                   </div>
 
+                  {/* Error */}
+                  {error && <p className="text-red-500 text-sm">{error}</p>}
+                  
                   <Button
                     type="submit"
                     className="w-full bg-neon-cyan text-black hover:bg-neon-blue transition-all duration-300 h-11 text-lg font-medium"
                   >
-                    Sign In
+                    {loading ? 'Loading...' : 'Sign In'}
                   </Button>
                 </form>
               </CardContent>

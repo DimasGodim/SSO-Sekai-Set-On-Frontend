@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Zap, Globe, Shield, Code } from 'lucide-react';
 
 export default function HomePage() {
+  console.log(process.env.NEXT_PUBLIC_RESTAPI_URL)
+  
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* Background patterns */}
