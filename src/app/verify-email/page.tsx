@@ -55,9 +55,21 @@ export default function VerifyEmailPage() {
     try {
       await verifyEmail({ email: email as string, verification_code: code })
       setSuccess(true)
-    } catch (err: any) {
-      const message =
-        err?.response?.data?.message || 'Terjadi kesalahan saat verifikasi'
+    } catch (err: unknown) {
+      let message = 'Terjadi kesalahan saat verifikasi'
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'response' in err &&
+        typeof (err as any).response === 'object' &&
+        (err as any).response !== null &&
+        'data' in (err as any).response &&
+        typeof (err as any).response.data === 'object' &&
+        (err as any).response.data !== null &&
+        'message' in (err as any).response.data
+      ) {
+        message = (err as { response: { data: { message: string } } }).response.data.message
+      }
       setError(message)
     } finally {
       setLoading(false)
