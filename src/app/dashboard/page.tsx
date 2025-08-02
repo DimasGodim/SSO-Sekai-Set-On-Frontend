@@ -708,11 +708,11 @@ export default function DashboardPage() {
                   onClick={handleDeleteAccount}
                   disabled={
                     deleteAccountLoading ||
-                    deleteAccountConfirm !== `delete my account (${userInfo?.name})`
+                    deleteAccountConfirm !== `delete my account (${userInfo?.name?.replace(/'/g, '&#39;')})`
                   }
                   className={`px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded transition-colors ${
                     deleteAccountLoading ||
-                    deleteAccountConfirm !== `delete my account (${userInfo?.name})`
+                    deleteAccountConfirm !== `delete my account (${userInfo?.name?.replace(/'/g, '&#39;')})`
                       ? 'opacity-50 cursor-not-allowed'
                       : ''
                   }`}

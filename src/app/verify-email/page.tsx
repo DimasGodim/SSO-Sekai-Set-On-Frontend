@@ -57,18 +57,32 @@ export default function VerifyEmailPage() {
       setSuccess(true)
     } catch (err: unknown) {
       let message = 'Terjadi kesalahan saat verifikasi'
+      // Type guard for deeply nested error structure
       if (
         typeof err === 'object' &&
         err !== null &&
         'response' in err &&
-        typeof (err as any).response === 'object' &&
-        (err as any).response !== null &&
-        'data' in (err as any).response &&
-        typeof (err as any).response.data === 'object' &&
-        (err as any).response.data !== null &&
-        'message' in (err as any).response.data
+        typeof (err as { response?: unknown }).response === 'object' &&
+        (err as { response?: unknown }).response !== null
       ) {
-        message = (err as { response: { data: { message: string } } }).response.data.message
+        const response = (err as { response: unknown }).response
+        if (
+          typeof response === 'object' &&
+          response !== null &&
+          'data' in response &&
+          typeof (response as { data?: unknown }).data === 'object' &&
+          (response as { data?: unknown }).data !== null
+        ) {
+          const data = (response as { data: unknown }).data
+          if (
+            typeof data === 'object' &&
+            data !== null &&
+            'message' in data &&
+            typeof (data as { message?: unknown }).message === 'string'
+          ) {
+            message = (data as { message: string }).message
+          }
+        }
       }
       setError(message)
     } finally {
