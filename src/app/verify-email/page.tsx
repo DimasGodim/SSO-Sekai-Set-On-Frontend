@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, FormEvent } from 'react'
+import { useEffect, useState, FormEvent, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { verifyEmail } from '@/lib/auth'
 import { Input } from '@/components/ui/input'
@@ -17,6 +17,15 @@ import { Loader2, Mail, CheckCircle, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <VerifyEmailPageContent />
+    </Suspense>
+  )
+}
+
+// Move the page logic to a new component
+function VerifyEmailPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const email = searchParams.get('email')
