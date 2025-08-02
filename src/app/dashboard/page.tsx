@@ -23,9 +23,23 @@ import { logoutUser } from '@/lib/logout';
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
-  const [userInfo, setUserInfo] = useState<any>(null);
-  const [apiKeys, setApiKeys] = useState<any[]>([]);
-  const [usageStats, setUsageStats] = useState<any>(null);
+  const [userInfo, setUserInfo] = useState<{
+    name: string;
+    nickname: string;
+    email: string;
+    activate: boolean;
+  } | null>(null);
+  const [apiKeys, setApiKeys] = useState<
+    { identifier: string; title: string; detail: string; created_at?: string }[]
+  >([]);
+  const [usageStats, setUsageStats] = useState<{
+    currentMonth: number;
+    limit: number;
+    successfulCalls: number;
+    errorRate: number;
+    averageResponseTime: number;
+    successRate: number;
+  } | null>(null);
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -34,7 +48,7 @@ export default function DashboardPage() {
   const [showGeneratedKeyModal, setShowGeneratedKeyModal] = useState(false);
   const [newKeyForm, setNewKeyForm] = useState({ title: '', description: '' });
   const [generatedKey, setGeneratedKey] = useState('');
-  const [editForm, setEditForm] = useState({ name: '', nickname: '' });
+  const [editForm, setEditForm] = useState<{ name: string; nickname: string }>({ name: '', nickname: '' });
   const [createKeyLoading, setCreateKeyLoading] = useState(false);
   const [deleteKeyLoading, setDeleteKeyLoading] = useState<string | null>(null);
   const [editAccountLoading, setEditAccountLoading] = useState(false);
@@ -92,8 +106,12 @@ export default function DashboardPage() {
       setShowCreateKeyModal(false);
       setShowGeneratedKeyModal(true);
       setNewKeyForm({ title: '', description: '' });
-    } catch (err: any) {
-      showCustomAlert(err.message);
+    } catch (err: unknown) {
+      if (typeof err === 'object' && err && 'message' in err) {
+        showCustomAlert((err as { message: string }).message);
+      } else {
+        showCustomAlert('Failed to create API key.');
+      }
     } finally {
       setCreateKeyLoading(false);
     }
@@ -111,8 +129,12 @@ export default function DashboardPage() {
     try {
       await deleteApiKeys(confirmDeleteKey.identifier);
       setApiKeys(prev => prev.filter(k => k.identifier !== confirmDeleteKey.identifier));
-    } catch (err: any) {
-      showCustomAlert(err.message);
+    } catch (err: unknown) {
+      if (typeof err === 'object' && err && 'message' in err) {
+        showCustomAlert((err as { message: string }).message);
+      } else {
+        showCustomAlert('Failed to delete API key.');
+      }
     } finally {
       setDeleteKeyLoading(null);
     }
@@ -123,10 +145,14 @@ export default function DashboardPage() {
     setEditAccountLoading(true);
     try {
       await UserUpdate({ name: editForm.name, nickname: editForm.nickname });
-      setUserInfo((prev: any) => ({ ...prev, name: editForm.name, nickname: editForm.nickname }));
+      setUserInfo((prev) => prev ? ({ ...prev, name: editForm.name, nickname: editForm.nickname }) : prev);
       setShowEditModal(false);
-    } catch (err: any) {
-      showCustomAlert(err.message);
+    } catch (err: unknown) {
+      if (typeof err === 'object' && err && 'message' in err) {
+        showCustomAlert((err as { message: string }).message);
+      } else {
+        showCustomAlert('Failed to update account.');
+      }
     } finally {
       setEditAccountLoading(false);
     }
@@ -138,8 +164,12 @@ export default function DashboardPage() {
     try {
       await UserDelete();
       window.location.href = '/';
-    } catch (err: any) {
-      showCustomAlert(err.message);
+    } catch (err: unknown) {
+      if (typeof err === 'object' && err && 'message' in err) {
+        showCustomAlert((err as { message: string }).message);
+      } else {
+        showCustomAlert('Failed to delete account.');
+      }
     } finally {
       setDeleteAccountLoading(false);
     }
@@ -151,7 +181,7 @@ export default function DashboardPage() {
     try {
       await logoutUser();
       window.location.href = '/';
-    } catch (err: any) {
+    } catch {
       showCustomAlert('Logout failed.');
     } finally {
       setLogoutLoading(false);
