@@ -683,7 +683,7 @@ export default function DashboardPage() {
               <h3 className="text-xl text-white font-bold">Confirm Account Deletion</h3>
               <p className="text-white/60">
                 Are you sure you want to delete your account? This action cannot be undone.<br />
-                Please type <span className="font-bold text-red-400">delete my account ({userInfo?.name})</span> to confirm.
+                Please type <span className="font-bold text-red-400">delete my account ({userInfo?.name?.replace(/'/g, '&#39;')})</span> to confirm.
               </p>
               <input
                 type="text"
