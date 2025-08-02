@@ -2,9 +2,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Zap, Globe, Shield, Code } from 'lucide-react';
 
-export default function HomePage() {
-  console.log(process.env.NEXT_PUBLIC_RESTAPI_URL)
-  
+export default function HomePage() {  
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* Background patterns */}
@@ -63,7 +61,11 @@ export default function HomePage() {
               size="lg"
               className="border-neon-blue text-neon-blue hover:text-white hover:bg-neon-blue/10 transition-all duration-300 text-lg px-8 py-3"
             >
-              <Link href="/docs">
+              <Link
+                href="https://sso-sekai-set-on-backend-production.up.railway.app/docs"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 View Documentation
               </Link>
             </Button>

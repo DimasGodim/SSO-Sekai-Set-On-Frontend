@@ -28,7 +28,6 @@ export default function SignInPage() {
     try {
       const res = await SignIn({ identification: formData.identification, password: formData.password, });      
       Cookies.set('access-token', res.access_token, { path: '/' });
-      Cookies.set('refresh_token', res.refresh_token, { path: '/' });
       router.push('/dashboard');
     } catch (err) {
       const error = err as Error;

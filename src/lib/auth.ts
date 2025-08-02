@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 const baseUrl = process.env.NEXT_PUBLIC_RESTAPI_URL;
 
@@ -7,11 +7,16 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-// Middleware untuk refresh token otomatis
+// Tambah type _retry ke config
+interface CustomAxiosRequestConfig extends AxiosRequestConfig {
+  _retry?: boolean;
+}
+
+// Middleware refresh token otomatis
 api.interceptors.response.use(
   res => res,
   async err => {
-    const originalConfig = err.config;
+    const originalConfig = err.config as CustomAxiosRequestConfig;
 
     if (err.response?.status === 401 && !originalConfig._retry) {
       originalConfig._retry = true;
@@ -22,12 +27,20 @@ api.interceptors.response.use(
         });
 
         const newToken = res.data.access_token;
+
+        // Update default header dan request ulang dengan token baru
         api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-        originalConfig.headers['Authorization'] = `Bearer ${newToken}`;
+        originalConfig.headers = {
+          ...originalConfig.headers,
+          Authorization: `Bearer ${newToken}`,
+        };
 
         return api(originalConfig);
       } catch (refreshError) {
-        console.error(refreshError);
+        console.error("Token refresh failed:", refreshError);
+        // Misalnya redirect ke login page atau clear session di sini
+        // window.location.href = "/login"; (opsional)
+        return Promise.reject(refreshError);
       }
     }
 
@@ -69,13 +82,4 @@ export async function verifyEmail(data:{ email: string, verification_code: strin
     const msg = error.response?.data?.detail ?? 'Verification Failed.';
     throw new Error(msg);
   }
-}
-// Fungsi cek apakah user sudah login
-export async function fetchMe(token: string) {
-  const res = await api.get('/user/me', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return res.data;
 }

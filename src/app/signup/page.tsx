@@ -32,7 +32,7 @@ export default function SignUpPage() {
     try {
       await SignUp({ email: formData.email, password: formData.password, name: formData.name, nickname: formData.nickname, });
   
-      router.push('/verify-email');
+      router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
     } catch (err) {
       const error = err as Error;
       setError(error.message);

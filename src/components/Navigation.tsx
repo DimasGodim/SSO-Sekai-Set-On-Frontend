@@ -37,11 +37,19 @@ export default function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link
-              href="/docs"
+            <a
+              href="https://sso-sekai-set-on-backend-production.up.railway.app/docs"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-white/80 hover:text-neon-blue transition-colors duration-200"
             >
               Docs
+            </a>
+            <Link
+              href="/dashboard"
+              className="text-white/80 hover:text-neon-blue transition-colors duration-200"
+            >
+              Dashboard
             </Link>
             <a
               href="https://github.com/DimasGodim"
@@ -78,13 +86,15 @@ export default function Navigation() {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-black/90 backdrop-blur-lg border border-white/10 rounded-lg mt-2">
-              <Link
-                href="/docs"
+              <a
+                href="https://sso-sekai-set-on-backend-production.up.railway.app/docs"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="block px-3 py-2 text-white/80 hover:text-neon-blue transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Docs
-              </Link>
+              </a>
               <Link
                 href="/dashboard"
                 className="block px-3 py-2 text-white/80 hover:text-neon-blue transition-colors"

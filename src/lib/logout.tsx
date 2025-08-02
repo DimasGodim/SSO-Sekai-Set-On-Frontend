@@ -2,6 +2,6 @@
 import Cookies from 'js-cookie';
 
 export function logoutUser() {
-  Cookies.remove('accessToken');
-  Cookies.remove('refreshToken');
+  Cookies.remove('access-token');
+  Cookies.remove('refresh_token');
 }
