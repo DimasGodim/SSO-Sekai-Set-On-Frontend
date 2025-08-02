@@ -638,7 +638,7 @@ export default function DashboardPage() {
                   onClick={closeGeneratedKeyModal}
                   className="px-4 py-2 bg-green-500 text-white hover:bg-green-600 rounded transition-colors"
                 >
-                  I've Saved It
+                  I Saved It
                 </button>
               </div>
             </div>
