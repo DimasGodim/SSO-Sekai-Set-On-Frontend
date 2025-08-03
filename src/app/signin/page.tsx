@@ -27,7 +27,8 @@ export default function SignInPage() {
     try {
       const res = await SignIn({ identification: formData.identification, password: formData.password, });      
       Cookies.set('access-token', res.access_token, { path: '/' });
-      router.replace('/dashboard');
+      // Ganti router.replace dengan window.location.replace agar cookie langsung dikirim ke server
+      window.location.replace('/dashboard');
     } catch (err) {
       const error = err as Error;
       setError(error.message);
