@@ -14,11 +14,9 @@ import { SignIn } from '@/lib/auth';
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ identification: '', password: '', });
-  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
-  
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,7 +27,7 @@ export default function SignInPage() {
     try {
       const res = await SignIn({ identification: formData.identification, password: formData.password, });      
       Cookies.set('access-token', res.access_token, { path: '/' });
-      setLoggedIn(true);
+      router.replace('/dashboard');
     } catch (err) {
       const error = err as Error;
       setError(error.message);
@@ -37,12 +35,6 @@ export default function SignInPage() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (loggedIn) {
-      router.push('/dashboard');
-    }
-  }, [loggedIn, router]);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
