@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
@@ -17,6 +17,7 @@ export default function SignInPage() {
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
   
   const router = useRouter();
 
@@ -28,7 +29,7 @@ export default function SignInPage() {
     try {
       const res = await SignIn({ identification: formData.identification, password: formData.password, });      
       Cookies.set('access-token', res.access_token, { path: '/' });
-      router.push('/dashboard');
+      setLoggedIn(true);
     } catch (err) {
       const error = err as Error;
       setError(error.message);
@@ -36,6 +37,12 @@ export default function SignInPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (loggedIn) {
+      router.push('/dashboard');
+    }
+  }, [loggedIn, router]);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -70,7 +77,7 @@ export default function SignInPage() {
             </p>
 
             <div className="space-y-4">
-              {[
+              { [
                 "⚡ Instant dashboard access",
                 "🔑 Manage your API keys",
                 "📊 Usage analytics",
@@ -135,12 +142,9 @@ export default function SignInPage() {
                       <Label htmlFor="password" className="text-white/80">
                         Password
                       </Label>
-                      <Link
-                        href="/forgot-password"
-                        className="text-sm text-neon-cyan hover:text-neon-blue transition-colors"
-                      >
+                      <span className="text-sm text-neon-cyan opacity-50 cursor-not-allowed">
                         Forgot password?
-                      </Link>
+                      </span>
                     </div>
                     <div className="relative">
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-white/40" />
@@ -188,9 +192,12 @@ export default function SignInPage() {
 
                 <div className="text-center text-white/40 text-xs">
                   Having trouble?{' '}
-                  <Link href="/support" className="text-neon-cyan hover:underline">
+                  <a
+                    href="mailto:dimas.ngadinegaran@gmail.com"
+                    className="text-neon-cyan hover:underline"
+                  >
                     Contact Support
-                  </Link>
+                  </a>
                 </div>
               </CardFooter>
             </Card>
