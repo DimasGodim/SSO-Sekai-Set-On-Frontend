@@ -158,11 +158,18 @@ export default function DashboardPage() {
     }
   };
 
+  // Fungsi untuk menghapus cookie
+  const deleteAuthCookies = () => {
+    document.cookie = 'access-token=; Max-Age=0; path=/;';
+    document.cookie = 'refresh_token=; Max-Age=0; path=/;';
+  };
+
   // Delete Account
   const handleDeleteAccount = async () => {
     setDeleteAccountLoading(true);
     try {
       await UserDelete();
+      deleteAuthCookies();
       window.location.href = '/';
     } catch (err: unknown) {
       if (typeof err === 'object' && err && 'message' in err) {
@@ -180,6 +187,7 @@ export default function DashboardPage() {
     setLogoutLoading(true);
     try {
       await logoutUser();
+      deleteAuthCookies();
       window.location.href = '/';
     } catch {
       showCustomAlert('Logout failed.');
