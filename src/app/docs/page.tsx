@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Code, Zap, Globe, Shield, Copy, ExternalLink, PlayCircle, Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { Code, Shield, Copy, ExternalLink, PlayCircle, Loader2, CheckCircle, XCircle } from 'lucide-react';
 import { ListNews, FilterNews } from '@/lib/news';
 import { ListTrain, ScheduleTrain } from '@/lib/train';
 import { ListCharacter, ChangeTTS } from '@/lib/tts';
@@ -19,17 +19,17 @@ interface EndpointData {
   bodyParams?: Record<string, string>;
   pathParams?: Record<string, string>;
   queryExample?: string;
-  bodyExample?: any;
+  bodyExample?: Record<string, unknown>;
   pathExample?: string;
-  response: any;
+  response: Record<string, unknown>;
   testFunction?: string;
-  testParams?: Record<string, any>;
+  testParams?: Record<string, unknown>;
 }
 
 // Test result interface
 interface TestResult {
   success: boolean;
-  data?: any;
+  data?: Record<string, unknown>;
   error?: string;
   loading: boolean;
 }
@@ -280,22 +280,22 @@ export default function DocsPage() {
           result = await ListNews(apiKey);
           break;
         case 'FilterNews':
-          result = await FilterNews(apiKey, endpoint.testParams?.title || '地震');
+          result = await FilterNews(apiKey, endpoint.testParams?.title as string || '地震');
           break;
         case 'ListCharacter':
           result = await ListCharacter(apiKey);
           break;
                  case 'ChangeTTS':
-           result = await ChangeTTS(apiKey, endpoint.testParams?.text || 'Hello World', endpoint.testParams?.char || 'Shikoku Metan', endpoint.testParams?.mode || 'Normal');
+           result = await ChangeTTS(apiKey, endpoint.testParams?.text as string || 'Hello World', endpoint.testParams?.char as string || 'Shikoku Metan', endpoint.testParams?.mode as string || 'Normal');
            break;
                  case 'ScheduleTrain':
-           result = await ScheduleTrain(apiKey, endpoint.testParams?.from_station || 'akihabara', endpoint.testParams?.to_station || 'Akabane', endpoint.testParams?.date || new Date(), endpoint.testParams?.time || { hour: 9, minute: 0 });
+           result = await ScheduleTrain(apiKey, endpoint.testParams?.from_station as string || 'akihabara', endpoint.testParams?.to_station as string || 'Akabane', endpoint.testParams?.date as Date || new Date(), endpoint.testParams?.time as { hour: number; minute: number } || { hour: 9, minute: 0 });
            break;
                  case 'ListTrain':
-           result = await ListTrain(apiKey, endpoint.testParams?.city || '', endpoint.testParams?.prefekture || '');
+           result = await ListTrain(apiKey, endpoint.testParams?.city as string || '', endpoint.testParams?.prefekture as string || '');
            break;
         case 'ForecastWeather':
-          result = await ForecastWeather(apiKey, endpoint.testParams?.city || 'tokyo');
+          result = await ForecastWeather(apiKey, endpoint.testParams?.city as string || 'tokyo');
           break;
         default:
           throw new Error('Unknown test function');
@@ -305,12 +305,13 @@ export default function DocsPage() {
         ...prev,
         [endpoint.endpoint]: { success: true, data: result, loading: false }
       }));
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
       setTestResults(prev => ({
         ...prev,
         [endpoint.endpoint]: { 
           success: false, 
-          error: error.message || 'An error occurred', 
+          error: errorMessage, 
           loading: false 
         }
       }));
@@ -322,8 +323,6 @@ export default function DocsPage() {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
-
-  const categories = ['Text to Speech', 'Weather Data', 'Train Information'];
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black">

@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 const baseUrl = process.env.NEXT_PUBLIC_RESTAPI_URL;
 
 export const api = axios.create({

@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { Button } from '@/components/ui/button';
@@ -16,8 +15,6 @@ export default function SignInPage() {
   const [formData, setFormData] = useState({ identification: '', password: '', });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
