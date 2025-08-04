@@ -61,11 +61,7 @@ export default function HomePage() {
               size="lg"
               className="border-neon-blue text-neon-blue hover:text-white hover:bg-neon-blue/10 transition-all duration-300 text-lg px-8 py-3"
             >
-              <Link
-                href="https://sso-sekai-set-on-backend-production.up.railway.app/docs"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link href="/docs">
                 View Documentation
               </Link>
             </Button>

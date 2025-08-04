@@ -500,7 +500,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <button
                 className="h-auto p-4 border border-white/20 hover:border-blue-400 hover:bg-blue-400/10 text-left flex flex-col items-start space-y-2 rounded transition-colors"
-                onClick={() => window.open('https://sso-sekai-set-on-backend-production.up.railway.app/docs', '_blank')}
+                onClick={() => window.location.href = '/docs'}
               >
                 <Globe className="h-5 w-5 text-blue-400" />
                 <div>
@@ -511,7 +511,7 @@ export default function DashboardPage() {
 
               <button
                 className="h-auto p-4 border border-white/20 hover:border-cyan-400 hover:bg-cyan-400/10 text-left flex flex-col items-start space-y-2 rounded transition-colors"
-                onClick={() => window.open('https://sso-sekai-set-on-backend-production.up.railway.app/docs', '_blank')}
+                onClick={() => window.location.href = '/docs'}
               >
                 <Zap className="h-5 w-5 text-cyan-400" />
                 <div>
