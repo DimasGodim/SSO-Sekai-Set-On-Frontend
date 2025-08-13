@@ -29,7 +29,7 @@ interface EndpointData {
 // Test result interface
 interface TestResult {
   success: boolean;
-  data?: Record<string, unknown>;
+  data?: unknown;
   error?: string;
   loading: boolean;
 }

@@ -1,6 +1,33 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Zap, Globe, Shield, Code } from 'lucide-react';
+import { memo } from 'react';
+
+// Feature interface
+interface Feature {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+// Memoized feature card component
+const FeatureCard = memo(({ feature, index }: { feature: Feature; index: number }) => (
+  <div
+    key={index}
+    className="p-6 rounded-lg bg-white/5 border border-white/10 hover:border-neon-blue/50 transition-all duration-300 group"
+  >
+    <div className="text-neon-blue mb-4 group-hover:text-neon-cyan transition-colors">
+      {feature.icon}
+    </div>
+    <h4 className="text-lg font-semibold text-white mb-2">
+      {feature.title}
+    </h4>
+    <p className="text-white/60 text-sm">
+      {feature.description}
+    </p>
+  </div>
+));
+FeatureCard.displayName = 'FeatureCard';
 
 export default function HomePage() {  
   return (
@@ -104,20 +131,7 @@ export default function HomePage() {
                 description: "Comprehensive docs, SDKs, and community support"
               }
             ].map((feature, index) => (
-              <div
-                key={index}
-                className="p-6 rounded-lg bg-white/5 border border-white/10 hover:border-neon-blue/50 transition-all duration-300 group"
-              >
-                <div className="text-neon-blue mb-4 group-hover:text-neon-cyan transition-colors">
-                  {feature.icon}
-                </div>
-                <h4 className="text-lg font-semibold text-white mb-2">
-                  {feature.title}
-                </h4>
-                <p className="text-white/60 text-sm">
-                  {feature.description}
-                </p>
-              </div>
+              <FeatureCard key={index} feature={feature} index={index} />
             ))}
           </div>
         </div>

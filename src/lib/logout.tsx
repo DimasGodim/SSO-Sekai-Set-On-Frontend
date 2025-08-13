@@ -1,7 +1,8 @@
-// /lib/logout.ts
-import Cookies from 'js-cookie';
+import { authCookies } from './utils/auth-helpers';
 
-export function logoutUser() {
-  Cookies.remove('access-token');
-  Cookies.remove('refresh_token');
+export function logoutUser(): Promise<void> {
+  return new Promise((resolve) => {
+    authCookies.clear();
+    resolve();
+  });
 }

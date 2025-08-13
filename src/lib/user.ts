@@ -1,122 +1,63 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import Cookies from "js-cookie";
-const baseUrl = process.env.NEXT_PUBLIC_RESTAPI_URL;
+import apiClient from './api-client';
+import { AxiosError } from 'axios';
+import Cookies from 'js-cookie';
+import type { User, UserUpdateData, ApiResponse } from './types';
+import { COOKIES } from './constants';
 
-export const api = axios.create({
-  baseURL: baseUrl,
-  withCredentials: true,
-});
-
-// Tambah type _retry ke config
-interface CustomAxiosRequestConfig extends AxiosRequestConfig {
-  _retry?: boolean;
-}
-
-// Middleware refresh token otomatis
-api.interceptors.response.use(
-  res => res,
-  async err => {
-    const originalConfig = err.config as CustomAxiosRequestConfig;
-
-    if (err.response?.status === 401 && !originalConfig._retry) {
-      originalConfig._retry = true;
-
-      try {
-        const res = await api.post(`/auth/refresh`, {}, {
-          withCredentials: true,
-        });
-
-        const newToken = res.data.access_token;
-
-        // Update default header dan request ulang dengan token baru
-        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-        originalConfig.headers = {
-          ...originalConfig.headers,
-          Authorization: `Bearer ${newToken}`,
-        };
-
-        return api(originalConfig);
-      } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
-        // Misalnya redirect ke login page atau clear session di sini
-        // window.location.href = "/login"; (opsional)
-        return Promise.reject(refreshError);
-      }
-    }
-
-    return Promise.reject(err);
-  }
-);
-
-// Fungsi detail
-export async function UserDetail() {
-  const access_token = Cookies.get('access-token');
-  if (!access_token) {
+// Helper function to get access token
+const getAccessToken = (): string => {
+  const token = Cookies.get(COOKIES.ACCESS_TOKEN);
+  if (!token) {
     throw new Error('Access token not found.');
   }
+  return token;
+};
 
-  try {
-    const res = await api.get(
-      '/user/detail',
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-    return res.data;
-  } catch (err) {
-    const error = err as AxiosError<{ detail?: string }>;
-    const msg = error.response?.data?.detail ?? 'Failed to fetch user details.';
-    throw new Error(msg);
-  }
-}
+// Helper function to create authorization headers
+const createAuthHeaders = (token: string) => ({
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
+
+// Get user details
+export async function UserDetail(): Promise<ApiResponse<User>> {
+  const accessToken = getAccessToken();
   
-// Fungsi update
-export async function UserUpdate(data: { name?: string; nickname?: string }) {
-  const access_token = Cookies.get('access-token');
-  if (!access_token) {
-      throw new Error('Access token not found.');
-  }
-
   try {
-      const res = await api.patch(
-      '/user/update',
-      data,
-      {
-          headers: {
-              Authorization: `Bearer ${access_token}`,
-          },
-      }
-      );
-      return res.data;
-  } catch (err) {
-      const error = err as AxiosError<{ detail?: string }>;
-      const msg = error.response?.data?.detail ?? 'Failed to update user.';
-      throw new Error(msg);
+    const response = await apiClient.get('/user/detail', createAuthHeaders(accessToken));
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ detail?: string }>;
+    const message = axiosError.response?.data?.detail ?? 'Failed to fetch user details.';
+    throw new Error(message);
   }
 }
 
-// Fungsi delete
-export async function UserDelete() {
-  const access_token = Cookies.get('access-token');
-  if (!access_token) {
-      throw new Error('Access token not found.');
-  }
-
+// Update user information
+export async function UserUpdate(data: UserUpdateData): Promise<ApiResponse<User>> {
+  const accessToken = getAccessToken();
+  
   try {
-      const res = await api.delete(
-      '/user/delete',
-      {
-          headers: {
-              Authorization: `Bearer ${access_token}`,
-          },
-      }
-      );
-      return res.data;
-  } catch (err) {
-      const error = err as AxiosError<{ detail?: string }>;
-      const msg = error.response?.data?.detail ?? 'Failed to delete user.';
-      throw new Error(msg);
+    const response = await apiClient.patch('/user/update', data, createAuthHeaders(accessToken));
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ detail?: string }>;
+    const message = axiosError.response?.data?.detail ?? 'Failed to update user.';
+    throw new Error(message);
+  }
+}
+
+// Delete user account
+export async function UserDelete(): Promise<ApiResponse> {
+  const accessToken = getAccessToken();
+  
+  try {
+    const response = await apiClient.delete('/user/delete', createAuthHeaders(accessToken));
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ detail?: string }>;
+    const message = axiosError.response?.data?.detail ?? 'Failed to delete user.';
+    throw new Error(message);
   }
 }

@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://sekai-set-on.vercel.app/
+
+# Sitemaps
+Sitemap: https://sekai-set-on.vercel.app/sitemap.xml

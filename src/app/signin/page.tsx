@@ -23,9 +23,15 @@ export default function SignInPage() {
 
     try {
       const res = await SignIn({ identification: formData.identification, password: formData.password, });      
-      Cookies.set('access-token', res.access_token, { path: '/' });
-      // Ganti router.replace dengan window.location.replace agar cookie langsung dikirim ke server
-      window.location.replace('/dashboard');
+      
+      // Check if response and access_token exist
+      if (res && res.access_token) {
+        Cookies.set('access-token', res.access_token, { path: '/' });
+        // Redirect to dashboard after successful login
+        window.location.replace('/dashboard');
+      } else {
+        throw new Error('Invalid response from server. Please try again.');
+      }
     } catch (err) {
       const error = err as Error;
       setError(error.message);

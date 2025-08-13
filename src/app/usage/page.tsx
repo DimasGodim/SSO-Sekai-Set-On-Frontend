@@ -34,7 +34,23 @@ export default function UsagePage() {
 
   useEffect(() => {
     UsageLogApiKeys()
-      .then(setUsage)
+      .then(response => {
+        // Transform ApiResponse<ApiKey[]> to UsageResponse
+        const transformedData: UsageResponse = {
+          status: response.status,
+          total_requests: response.data.reduce((sum, key) => sum + (key.total_requests || 0), 0),
+          data: response.data.map(key => ({
+            identifier: key.identifier,
+            title: key.title,
+            detail: key.detail,
+            created_at: key.created_at || '',
+            expired: key.expired || null,
+            total_requests: key.total_requests || 0,
+            logs: key.logs || []
+          }))
+        };
+        setUsage(transformedData);
+      })
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
